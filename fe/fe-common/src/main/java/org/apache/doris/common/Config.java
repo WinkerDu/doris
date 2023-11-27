@@ -2247,4 +2247,15 @@ public class Config extends ConfigBase {
     })
     public static String access_control_allowed_origin_domain = "*";
 
+    @ConfField(masterOnly = true, description = {
+            "设置 root 用户初始化2阶段 SHA-1 加密密码，默认为''，即不设置 root 密码。"
+                    + "后续 root 用户的 `set password` 操作会将 root 初始化密码覆盖。"
+                    + "示例：如要配置密码的明文是 `root@123`，可在Doris执行SQL `select password('root@123')` "
+                    + "获取加密密码 `*A00C34073A26B40AB4307650BFB9309D6BFA6999`",
+            "Set root user initial 2-staged SHA-1 encrypted password, default as '', means no root password. "
+                    + "Subsequent `set password` operations for root user will overwrite the initial root password. "
+                    + "Example: If you want to configure a plaintext password `root@123`."
+                    + "You can execute Doris SQL `select password('root@123')` to generate encrypted "
+                    + "password `*A00C34073A26B40AB4307650BFB9309D6BFA6999`"})
+    public static String initial_root_password = "";
 }
