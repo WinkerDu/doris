@@ -206,6 +206,22 @@ public class ModifyTablePropertiesClause extends AlterTableClause {
             }
             this.needTableStable = false;
             this.opType = AlterOpType.MODIFY_TABLE_PROPERTY_SYNC;
+        } else if (properties.containsKey(PropertyAnalyzer.PROPERTIES_TIME_SERIES_COMPACTION_EMPTY_ROWSETS_THRESHOLD)) {
+            long emptyRowsetsThreshold;
+            String emptyRowsetsThresholdStr = properties
+                                    .get(PropertyAnalyzer.PROPERTIES_TIME_SERIES_COMPACTION_EMPTY_ROWSETS_THRESHOLD);
+            try {
+                emptyRowsetsThreshold = Long.parseLong(emptyRowsetsThresholdStr);
+                if (emptyRowsetsThreshold < 2) {
+                    throw new AnalysisException("time_series_compaction_empty_rowsets_threshold can not be less than 2:"
+                        + emptyRowsetsThresholdStr);
+                }
+            } catch (NumberFormatException e) {
+                throw new AnalysisException("Invalid time_series_compaction_empty_rowsets_threshold format: "
+                        + emptyRowsetsThresholdStr);
+            }
+            this.needTableStable = false;
+            this.opType = AlterOpType.MODIFY_TABLE_PROPERTY_SYNC;
         } else if (properties.containsKey(PropertyAnalyzer.PROPERTIES_SKIP_WRITE_INDEX_ON_LOAD)) {
             if (!properties.get(PropertyAnalyzer.PROPERTIES_SKIP_WRITE_INDEX_ON_LOAD).equalsIgnoreCase("true")
                     && !properties.get(PropertyAnalyzer
@@ -223,6 +239,16 @@ public class ModifyTablePropertiesClause extends AlterTableClause {
                 throw new AnalysisException(
                     "Property "
                     + PropertyAnalyzer.PROPERTIES_ENABLE_SINGLE_REPLICA_COMPACTION + " should be set to true or false");
+            }
+            this.needTableStable = false;
+            this.opType = AlterOpType.MODIFY_TABLE_PROPERTY_SYNC;
+        } else if (properties.containsKey(PropertyAnalyzer.PROPERTIES_DISABLE_AUTO_COMPACTION)) {
+            if (!properties.get(PropertyAnalyzer.PROPERTIES_DISABLE_AUTO_COMPACTION).equalsIgnoreCase("true")
+                    && !properties.get(PropertyAnalyzer
+                                            .PROPERTIES_DISABLE_AUTO_COMPACTION).equalsIgnoreCase("false")) {
+                throw new AnalysisException(
+                    "Property "
+                        + PropertyAnalyzer.PROPERTIES_DISABLE_AUTO_COMPACTION + " should be set to true or false");
             }
             this.needTableStable = false;
             this.opType = AlterOpType.MODIFY_TABLE_PROPERTY_SYNC;

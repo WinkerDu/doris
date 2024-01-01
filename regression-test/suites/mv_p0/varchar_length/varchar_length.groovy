@@ -35,6 +35,7 @@ suite ("varchar_length") {
             "enable_unique_key_merge_on_write" = "false"
             ); 
         """
+        // only mor table can have mv
 
     createMV ("CREATE MATERIALIZED VIEW mv_test as SELECT report_time, vid FROM test1 ORDER BY report_time DESC; ")
 

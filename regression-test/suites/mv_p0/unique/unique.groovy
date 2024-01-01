@@ -32,6 +32,7 @@ suite ("unique") {
             distributed BY hash(k1) buckets 3
             properties("replication_num" = "1", "enable_unique_key_merge_on_write" = "false");
         """
+        // only mor table can have mv
 
     sql "insert into u_table select 1,1,1,'a';"
     sql "insert into u_table select 20,2,2,'b';"

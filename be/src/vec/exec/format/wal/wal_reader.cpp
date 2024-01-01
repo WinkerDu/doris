@@ -58,7 +58,7 @@ Status WalReader::get_next_block(Block* block, size_t* read_rows, bool* eof) {
     for (auto column : columns) {
         auto pos = _column_index[index];
         vectorized::ColumnPtr column_ptr = src_block.get_by_position(pos).column;
-        if (column.column->is_nullable()) {
+        if (column_ptr != nullptr && column.column->is_nullable()) {
             column_ptr = make_nullable(column_ptr);
         }
         dst_block.insert(index, vectorized::ColumnWithTypeAndName(std::move(column_ptr),
@@ -88,8 +88,6 @@ void WalReader::string_split(const std::string& str, const std::string& splits,
 Status WalReader::get_columns(std::unordered_map<std::string, TypeDescriptor>* name_to_type,
                               std::unordered_set<std::string>* missing_cols) {
     RETURN_IF_ERROR(_wal_reader->read_header(_version, _col_ids));
-    std::vector<std::string> col_element;
-    string_split(_col_ids, ",", col_element);
     RETURN_IF_ERROR(_state->exec_env()->wal_mgr()->get_wal_column_index(_wal_id, _column_index));
     return Status::OK();
 }

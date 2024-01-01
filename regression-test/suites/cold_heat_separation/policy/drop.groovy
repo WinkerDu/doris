@@ -126,6 +126,7 @@ suite("drop_policy") {
                 "enable_unique_key_merge_on_write" = "false"
             );
         """
+        // storage policy is disabled on mow table
 
         assertEquals(create_table_use_created_policy.size(), 1);
 
